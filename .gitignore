@@ -1,0 +1,17 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Quarto
+.quarto/
+
+# VS Code
+.vscode/
+
+# Output
+*.html
+
+# Mac/Windows
+.DS_Store
+Thumbs.db
