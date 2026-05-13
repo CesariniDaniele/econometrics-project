@@ -10,8 +10,12 @@
 .vscode/
 
 # Output
+output/
+
+# Rendered files
 *.html
 
-# Mac/Windows
+# OS
 .DS_Store
 Thumbs.db
+.positai

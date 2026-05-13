@@ -1,0 +1,134 @@
+---
+title: "Exploratory Data Analysis - jtrain3"
+format: html
+---
+
+## Setup
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+## Load data
+
+```{r}
+data <- read_excel("../data/jtrain3.xlsx") %>%
+  mutate(
+    re78 = as.numeric(re78),
+    re75 = as.numeric(re75),
+    re74 = as.numeric(re74),
+    train = as.numeric(train),
+    educ = as.numeric(educ),
+    age = as.numeric(age)
+  )
+
+glimpse(data)
+summary(data)
+```
+
+# Part 1 - Exploratory Data Analysis
+
+## a) Summary statistics
+
+```{r}
+data %>%
+  select(re78, train, re74, re75, educ, age) %>%
+  summary()
+```
+
+```{r}
+data %>%
+  select(re78, train, re74, re75, educ, age) %>%
+  summarise(
+    across(
+      everything(),
+      list(
+        mean = ~ mean(.x, na.rm = TRUE),
+        sd = ~ sd(.x, na.rm = TRUE),
+        min = ~ min(.x, na.rm = TRUE),
+        median = ~ median(.x, na.rm = TRUE),
+        max = ~ max(.x, na.rm = TRUE)
+      )
+    )
+  )
+```
+
+## b) Average re78 by training status
+
+```{r}
+data %>%
+  group_by(train) %>%
+  summarise(
+    n = n(),
+    mean_re78 = mean(re78, na.rm = TRUE),
+    sd_re78 = sd(re78, na.rm = TRUE),
+    median_re78 = median(re78, na.rm = TRUE)
+  )
+```
+
+## c) Distribution of re78 by training status
+
+```{r}
+ggplot(data, aes(x = re78, fill = factor(train))) +
+  geom_histogram(
+    bins = 30,
+    alpha = 0.5,
+    position = "identity"
+  ) +
+  labs(
+    title = "Distribution of 1978 earnings by training status",
+    x = "Real earnings in 1978",
+    y = "Count",
+    fill = "Training status"
+  )
+```
+
+```{r}
+ggplot(data, aes(x = factor(train), y = re78)) +
+  geom_boxplot() +
+  labs(
+    title = "1978 earnings by training status",
+    x = "Training status",
+    y = "Real earnings in 1978"
+  )
+```
+
+## d) Pre-treatment comparability
+
+```{r}
+data %>%
+  group_by(train) %>%
+  summarise(
+    n = n(),
+    mean_re74 = mean(re74, na.rm = TRUE),
+    mean_re75 = mean(re75, na.rm = TRUE),
+    mean_educ = mean(educ, na.rm = TRUE),
+    mean_age = mean(age, na.rm = TRUE),
+    sd_re74 = sd(re74, na.rm = TRUE),
+    sd_re75 = sd(re75, na.rm = TRUE),
+    sd_educ = sd(educ, na.rm = TRUE),
+    sd_age = sd(age, na.rm = TRUE)
+  )
+```
+
+```{r}
+data_long_pre <- data %>%
+  select(train, re74, re75) %>%
+  pivot_longer(
+    cols = c(re74, re75),
+    names_to = "year",
+    values_to = "earnings"
+  )
+
+ggplot(data_long_pre, aes(x = factor(train), y = earnings)) +
+  geom_boxplot() +
+  facet_wrap(~ year) +
+  labs(
+    title = "Pre-treatment earnings by training status",
+    x = "Training status",
+    y = "Earnings"
+  )
+```
