@@ -39,23 +39,6 @@ data %>%
   summary()
 ```
 
-```{r}
-data %>%
-  select(re78, train, re74, re75, educ, age) %>%
-  summarise(
-    across(
-      everything(),
-      list(
-        mean = ~ mean(.x, na.rm = TRUE),
-        sd = ~ sd(.x, na.rm = TRUE),
-        min = ~ min(.x, na.rm = TRUE),
-        median = ~ median(.x, na.rm = TRUE),
-        max = ~ max(.x, na.rm = TRUE)
-      )
-    )
-  )
-```
-
 ## b) Average re78 by training status
 
 ```{r}
@@ -67,6 +50,10 @@ data %>%
     sd_re78 = sd(re78, na.rm = TRUE),
     median_re78 = median(re78, na.rm = TRUE)
   )
+```
+
+```{r}
+aggregate(re78 ~ train, data = data, mean)
 ```
 
 ## c) Distribution of re78 by training status
