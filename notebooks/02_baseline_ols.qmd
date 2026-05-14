@@ -24,7 +24,8 @@ data <- read_excel("../data/jtrain3.xlsx") %>%
     educ = as.numeric(educ),
     age = as.numeric(age),
     black = as.numeric(black),
-    hisp = as.numeric(hisp)
+    hisp = as.numeric(hisp),
+    trre75 = as.numeric(trre75)
   )
 
 glimpse(data)
@@ -67,4 +68,48 @@ modelsummary(list(
   "Baseline model" = ols1,
   "Extended model" = ols2
 ))
+```
+
+# PART 4 - Interaction Effects
+
+## Model with interaction between training and previous earnings
+
+```{r}
+ols3 <- lm(
+  re78 ~ train + re75 + trre75 + educ + age,
+  data = data
+)
+
+summary(ols3)
+```
+
+## Model comparison
+
+```{r}
+modelsummary(
+  list(
+    "Baseline" = ols1,
+    "Extended" = ols2,
+    "Interaction" = ols3
+  ),
+  stars = TRUE
+)
+```
+
+## Model fit comparison
+
+```{r}
+data.frame(
+  Model = c("Baseline", "Extended", "Interaction"),
+  R_squared = c(
+    summary(ols1)$r.squared,
+    summary(ols2)$r.squared,
+    summary(ols3)$r.squared
+  ),
+  Adjusted_R_squared = c(
+    summary(ols1)$adj.r.squared,
+    summary(ols2)$adj.r.squared,
+    summary(ols3)$adj.r.squared
+  )
+)
 ```
