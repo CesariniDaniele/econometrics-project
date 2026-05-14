@@ -1,0 +1,43 @@
+---
+title: "Baseline OLS Model"
+format: html
+---
+
+## Setup
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(modelsummary)
+```
+
+## Load data
+
+```{r}
+data <- read_excel("../data/jtrain3.xlsx") %>%
+  mutate(
+    re78 = as.numeric(re78),
+    re75 = as.numeric(re75),
+    train = as.numeric(train),
+    educ = as.numeric(educ),
+    age = as.numeric(age)
+  )
+```
+
+## Baseline OLS regression
+
+```{r}
+ols1 <- lm(
+  re78 ~ train + re75 + educ + age,
+  data = data
+)
+
+summary(ols1)
+```
+
+## Regression table
+
+```{r}
+modelsummary(ols1)
+```
