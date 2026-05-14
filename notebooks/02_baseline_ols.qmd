@@ -1,5 +1,5 @@
 ---
-title: "Baseline OLS Model"
+title: "PART 2 - Baseline OLS Model"
 format: html
 ---
 
@@ -19,10 +19,15 @@ data <- read_excel("../data/jtrain3.xlsx") %>%
   mutate(
     re78 = as.numeric(re78),
     re75 = as.numeric(re75),
+    re74 = as.numeric(re74),
     train = as.numeric(train),
     educ = as.numeric(educ),
-    age = as.numeric(age)
+    age = as.numeric(age),
+    black = as.numeric(black),
+    hisp = as.numeric(hisp)
   )
+
+glimpse(data)
 ```
 
 ## Baseline OLS regression
@@ -40,4 +45,26 @@ summary(ols1)
 
 ```{r}
 modelsummary(ols1)
+```
+
+# PART 3 - Extended Model with Demographic Controls
+
+## Extended OLS model
+
+```{r}
+ols2 <- lm(
+  re78 ~ train + re75 + re74 + educ + age + black + hisp,
+  data = data
+)
+
+summary(ols2)
+```
+
+## Regression table
+
+```{r}
+modelsummary(list(
+  "Baseline model" = ols1,
+  "Extended model" = ols2
+))
 ```
