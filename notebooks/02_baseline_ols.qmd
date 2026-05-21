@@ -220,3 +220,28 @@ ols_delta <- lm(
 
 summary(ols_delta)
 ```
+
+# Part 7 - Heterogeneous Treatment Effects
+
+## Estimate preferred model separately by race
+
+```{r}
+data_black <- data %>%
+  filter(black == 1)
+
+data_nonblack <- data %>%
+  filter(black == 0)
+
+ols_black <- lm(
+  re78 ~ train + re75 + re74 + educ + age + hisp,
+  data = data_black
+)
+
+ols_nonblack <- lm(
+  re78 ~ train + re75 + re74 + educ + age + hisp,
+  data = data_nonblack
+)
+
+summary(ols_black)
+summary(ols_nonblack)
+```
