@@ -163,3 +163,60 @@ coeftest(
 ```{r}
 resettest(ols2)
 ```
+
+# Part 6 - Earnings Changes and Causal Interpretation
+
+## Construct earnings change
+
+```{r}
+data <- data %>%
+  mutate(
+    delta_re = re78 - re75
+  )
+```
+  
+## Average earnings changes by training status
+
+```{r}
+data %>%
+  group_by(train) %>%
+  summarise(
+    mean_delta = mean(delta_re, na.rm = TRUE),
+    sd_delta = sd(delta_re, na.rm = TRUE),
+    median_delta = median(delta_re, na.rm = TRUE),
+    n = n()
+  )
+```
+
+## Distribution of earnings changes
+
+```{r}
+ggplot(data, aes(x = factor(train), y = delta_re)) +
+  geom_boxplot() +
+  labs(
+    title = "Earnings change by training status",
+    x = "Training status",
+    y = "Change in earnings (re78 - re75)"
+  )
+
+ggplot(data, aes(x = factor(train), y = delta_re)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(-50, 50)) +
+  labs(
+    title = "Earnings change by training status",
+    x = "Training status",
+    y = "Change in earnings (re78 - re75)"
+  )
+
+```
+  
+## Regression using earnings changes
+
+```{r}
+ols_delta <- lm(
+  delta_re ~ train + educ + age,
+  data = data
+)
+
+summary(ols_delta)
+```
