@@ -113,3 +113,53 @@ data.frame(
   )
 )
 ```
+
+# Part 5 - Model Diagnostics
+
+## Packages
+
+```{r}
+library(car)
+library(lmtest)
+library(sandwich)
+library(corrplot)
+```
+```{r}
+corr_data <- data %>%
+  select(re75, re74, educ, age)
+
+corr_matrix <- cor(corr_data, use = "complete.obs")
+
+corr_matrix
+```
+
+```{r}
+corrplot(corr_matrix, method = "color")
+```
+
+## Variance Inflation Factor (VIF)
+
+```{r}
+vif(ols2)
+```
+
+## Breusch-Pagan test
+
+```{r}
+bptest(ols2)
+```
+
+## Robust standard errors
+
+```{r}
+coeftest(
+  ols2,
+  vcov = vcovHC(ols2, type = "HC1")
+)
+```
+
+## RESET test
+
+```{r}
+resettest(ols2)
+```
