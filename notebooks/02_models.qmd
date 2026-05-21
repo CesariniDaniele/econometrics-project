@@ -137,19 +137,19 @@ corr_matrix
 corrplot(corr_matrix, method = "color")
 ```
 
-## Variance Inflation Factor (VIF)
+## a) Variance Inflation Factor (VIF)
 
 ```{r}
 vif(ols2)
 ```
 
-## Breusch-Pagan test
+## b) Breusch-Pagan test
 
 ```{r}
 bptest(ols2)
 ```
 
-## Robust standard errors
+## c) Robust standard errors
 
 ```{r}
 coeftest(
@@ -158,7 +158,7 @@ coeftest(
 )
 ```
 
-## RESET test
+## d) RESET test
 
 ```{r}
 resettest(ols2)
@@ -166,7 +166,7 @@ resettest(ols2)
 
 # Part 6 - Earnings Changes and Causal Interpretation
 
-## Construct earnings change
+## a) Construct earnings change
 
 ```{r}
 data <- data %>%
@@ -187,30 +187,8 @@ data %>%
     n = n()
   )
 ```
-
-## Distribution of earnings changes
-
-```{r}
-ggplot(data, aes(x = factor(train), y = delta_re)) +
-  geom_boxplot() +
-  labs(
-    title = "Earnings change by training status",
-    x = "Training status",
-    y = "Change in earnings (re78 - re75)"
-  )
-
-ggplot(data, aes(x = factor(train), y = delta_re)) +
-  geom_boxplot() +
-  coord_cartesian(ylim = c(-50, 50)) +
-  labs(
-    title = "Earnings change by training status",
-    x = "Training status",
-    y = "Change in earnings (re78 - re75)"
-  )
-
-```
   
-## Regression using earnings changes
+## b) Regression using earnings changes
 
 ```{r}
 ols_delta <- lm(
@@ -222,8 +200,7 @@ summary(ols_delta)
 ```
 
 # Part 7 - Heterogeneous Treatment Effects
-
-## Estimate preferred model separately by race
+## a) Estimate preferred model separately by race
 
 ```{r}
 data_black <- data %>%
